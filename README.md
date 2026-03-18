@@ -1,12 +1,12 @@
 # The Reverse GitOps Manifesto
 
-## GitOps for Humans and AI
+*An API-first operating model where users and agents make validated changes through a typed API, while a controller writes those changes back into Git as clean declarative intent for audit, promotion, and distribution.*
 
 ---
 
 GitOps gave us reproducibility, auditability, and a shared language for intent. One of the best ideas the infrastructure community has produced.
 
-But it carries one assumption that is starting to fail: that everyone making a change is comfortable working directly in Git. Platform engineers are building self-service platforms. Developers and agents want a UI or a CLI backed by an API.
+But it carries an assumption that is starting to fail: that every user making a change should work directly through Git. Platform engineers are building self-service platforms. Developers and agents want a UI or a CLI backed by an API.
 
 ---
 
@@ -22,39 +22,23 @@ The better front door already exists.
 
 ## Principle 1: API First
 
-A dedicated Kubernetes API is the front door for change. Humans use it through CLIs, dashboards, and IDEs. AI agents use it through code. Changes are validated immediately: wrong type, unknown field, policy violation, all caught at write time.
+A dedicated Kubernetes API is the front door for managing intent. Humans use it through CLIs, IDEs and GUIs. AI agents use it programmatically. Changes are validated immediately: wrong type, unknown field, policy violation, all caught at write time. Both humans and AI agents benefit from the tighter feedback loop.
 
-A controller serializes API state back into Git as clean, declarative YAML commits. The user's identity is preserved as commit author. This works because Kubernetes resources can be represented both as API objects and as declarative YAML. The controller's job is to capture intent cleanly, not reinterpret it. Git becomes the memory: every change recorded, diffable, auditable, without any user needing to write a commit.
+A controller serializes API state back into Git as clean, declarative YAML files. The user's identity is preserved as commit author. This works because Kubernetes resources can be represented both as API objects and as declarative YAML. The controller's job is to capture intent cleanly, not reinterpret it. Git becomes the memory: every change recorded, diffable, auditable, without any user needing to write a commit.
 
 ---
 
-## Principle 2: Only Well-Abstracted Intent Gets Captured
+## Principle 2: Capture Intent, Not Implementation
 
-Two-way sync between API and Git only works when resources are clean enough to round-trip. That constraint is also the design discipline: if your abstraction can't round-trip cleanly, it isn't ready.
+Users declare intent. The platform renders it. What gets preserved in Git must be the stable user-facing interface, not the concrete resources produced downstream.
 
-Users declare intent. The platform renders it. Behind the abstraction boundary, the platform team retains full freedom: Helm, Kustomize, Crossplane, custom controllers. The constraint is on the interface, not the implementation.
+Round-tripping is the test. The model is typed resources that can be validated, serialized, and restored as declarative state. User-facing abstractions should meet that same standard. Behind that boundary, the platform team retains full freedom: Helm, Kustomize, Crossplane, custom controllers. The constraint is on the interface, not the implementation.
 
 ---
 
 ## Principle 3: GitOps Still Applies
 
-Reverse GitOps is a compliant extension of GitOps, not a replacement. The downstream reconciliation is unchanged. Flux, ArgoCD, and the full GitOps toolkit continue to work exactly as before.  API-first does not mean API-only. GitOps and Reverse GitOps coexist. Git-first remains useful for promotion, disaster recovery, and bulk rollouts. API-first fits developer self-service and AI-driven change.
-
----
-
-The API comes first. Git remembers.
-
-That is Reverse GitOps.
-
----
-
-*First draft — March 2026. Feedback welcome.*
-
-*Reverse GitOps is an API-first operating model where users and agents make validated changes through a typed platform API, while a controller writes those changes back into Git as clean declarative state for audit, promotion, and distribution.*
-
----
-
-## Why This Is Still GitOps
+Reverse GitOps is a compliant extension of GitOps, not a replacement. Existing GitOps tools like Flux and ArgoCD continue to work as before. Git remains useful for promotion, disaster recovery, and bulk rollouts.
 
 The OpenGitOps project defines four principles, and Reverse GitOps satisfies all four:
 
@@ -65,4 +49,14 @@ The OpenGitOps project defines four principles, and Reverse GitOps satisfies all
 | Pulled Automatically | The write-back controller pulls from the API; downstream GitOps operators pull from Git |
 | Continuously Reconciled | Both the write-back controller and downstream operators reconcile continuously |
 
-The spec itself notes that Git is the "canonical example" of a state store, not the only valid one.
+The GitOps spec notes that Git is the "canonical example" of a state store, not the only valid one. Reverse GitOps works today within that spec — and points toward where the ecosystem is heading.
+
+---
+
+The API comes first. Git remembers.
+
+That is Reverse GitOps.
+
+---
+
+*First draft — March 2026. Feedback welcome.*
