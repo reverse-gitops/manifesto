@@ -23,7 +23,7 @@ Git was built for source code collaboration. That works well for code. For infra
 
 A dedicated Kubernetes API is the front door for intent: which applications to run, which routes are allowed, which teams have access. Not workloads, not rendered infrastructure. This API is deliberately shaped around stable user-facing abstractions, not arbitrary cluster resources. Humans use it through CLIs, IDEs, and GUIs. AI agents use it programmatically. Changes are validated immediately: wrong type, unknown field, policy violation, all caught at write time.
 
-Relevant API activity is automatically written to Git as YAML. An HTTP POST creates a new manifest, a PATCH updates it, a DELETE removes it. A defined section of the repository (the intent folder) is managed automatically, the rest left untouched. The user's identity is preserved as commit author. Git becomes the memory: every change recorded, diffable, auditable, without any user needing to write a commit.
+Relevant API activity is automatically written to Git as YAML. An HTTP POST creates a new manifest, a PATCH updates it, a DELETE removes it. The actors identity is preserved as commit author. A defined section of the repository (the intent folder) is managed automatically, the rest left untouched. Git becomes the memory: every change recorded, diffable, auditable, without any actor needing to write a commit.
 
 This only works for user-facing resources whose declarative form is stable enough to round-trip cleanly.
 
